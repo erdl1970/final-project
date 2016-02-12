@@ -1,6 +1,6 @@
 class CreateMeasures < ActiveRecord::Migration
   def change
-    create_table :measures do |t|
+    create_table :attribute_measures do |t|
       t.references :attribute, index: true, foreign_key: true
       t.string :value
 

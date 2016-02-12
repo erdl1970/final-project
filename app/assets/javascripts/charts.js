@@ -37,7 +37,7 @@ $(function () {
             },
             tooltip: {
                 headerFormat: '<small>{point.x:%e de %B a las %H:%m}</small><br>',
-                pointFormat: '<h1>{series.name}:{point.y:.2f} kw</h1>'
+                pointFormat: '{series.name}:{point.y:.2f} w'
             }
         });
         charts.push(chart);
@@ -45,7 +45,7 @@ $(function () {
 
     periods = ['year','month','week', 'day'];
     $.each(periods, function(index, period) {
-        $.get('entities/Refrigerador/attributes/Potencia/measures?period='+period, function(measures) {
+        $.get('entities/Refrigerador/attributes/Potencia/attribute_measures?period='+period, function(measures) {
             data = []
             $.each(measures, function(index, measure ) {
               data[index]=[new Date(measure.created_at).getTime(), parseFloat(measure.value)]

@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
    resources :entities, except: [:new, :edit] do 
     resources :attributes, except: [:new, :edit] do
-      resources :measures, except: [:new, :edit]
+      resources :attribute_measures, except: [:new, :edit]
     end
   end
   
