@@ -13,6 +13,15 @@
 
 ActiveRecord::Schema.define(version: 20160128184430) do
 
+  create_table "attribute_measures", force: :cascade do |t|
+    t.integer  "attribute_id", limit: 4
+    t.string   "value",        limit: 255
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  add_index "attribute_measures", ["attribute_id"], name: "index_attribute_measures_on_attribute_id", using: :btree
+
   create_table "attributes", force: :cascade do |t|
     t.integer  "entity_id",  limit: 4
     t.string   "name",       limit: 255
@@ -29,15 +38,6 @@ ActiveRecord::Schema.define(version: 20160128184430) do
     t.datetime "updated_at",             null: false
   end
 
-  create_table "measures", force: :cascade do |t|
-    t.integer  "attribute_id", limit: 4
-    t.string   "value",        limit: 255
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
-  end
-
-  add_index "measures", ["attribute_id"], name: "index_measures_on_attribute_id", using: :btree
-
+  add_foreign_key "attribute_measures", "attributes"
   add_foreign_key "attributes", "entities"
-  add_foreign_key "measures", "attributes"
 end
