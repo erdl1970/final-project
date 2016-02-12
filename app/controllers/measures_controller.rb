@@ -8,12 +8,17 @@ class MeasuresController < ApplicationController
   def index
     period = params[:period]
     if period.present?
-      if period == "week"
-        @measures = @attribute.measures.where(created_at: Date.today.all_week)
+      if period == "day"
+        @measures = @attribute.measures.where("created_at >= ?", Date.today.beginning_of_day)
+      elsif period == "week"
+        #@measures = @attribute.measures.where(created_at: Date.today.all_week)
+        @measures = @attribute.measures.find_by_sql("SELECT created_at as created_at, ROUND(AVG(value),2) as value FROM measures WHERE (created_at BETWEEN '#{1.week.ago}' AND '#{Time.now}') GROUP BY date(created_at), hour(created_at)")
       elsif period == "month"
-        @measures = @attribute.measures.where(created_at: Date.today.all_month)
+        #@measures = @attribute.measures.where(created_at: Date.today.all_month)
+        @measures = @attribute.measures.find_by_sql("SELECT created_at as created_at, ROUND(AVG(value),2) as value FROM measures WHERE (created_at BETWEEN '#{1.month.ago}' AND '#{Time.now}') GROUP BY date(created_at)")
       elsif period == "year"
-        @measures = @attribute.measures.where(:created_at => Date.today.all_year)#.order(:created_at).group("date(created_at)").average(:value)
+        #@measures = @attribute.measures.where(:created_at => Date.today.all_year).order(:created_at).group("date(created_at)").average(:value)
+        @measures = @attribute.measures.find_by_sql("SELECT created_at as created_at, ROUND(AVG(value),2) as value FROM measures WHERE (created_at BETWEEN '#{1.year.ago}' AND '#{Time.now}') GROUP BY date(created_at)")
       else
         @measures = @attribute.measures.all
       end
@@ -21,7 +26,7 @@ class MeasuresController < ApplicationController
       @measures = @attribute.measures.all
     end
 
-    render json: @measures.to_json()
+    render json: @measures.to_json(only:[:value,:created_at])
   end
 
   # GET /measures/1

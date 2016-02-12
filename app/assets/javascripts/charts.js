@@ -6,14 +6,15 @@ var lang = {
     };
 
 var charts = [];
-var titles = ['anual', 'mensual', 'semanal'];
+var titles = ['anual', 'mensual', 'semanal', 'diaria'];
 $(function () {
     Highcharts.setOptions({lang: lang});
-    var containers = ['year-container', 'month-container', 'week-container'];
+    var containers = ['year-container', 'month-container', 'week-container', 'day-container'];
     $.each(containers, function(index){
         chart = new Highcharts.Chart({
             chart: {
-                renderTo: this.toString()
+                renderTo: this.toString(),
+                zoomType: 'x'
             },
             series: [{
                 type: 'line',
@@ -33,12 +34,16 @@ $(function () {
                     text: 'Fecha'
                 },
                 type: 'datetime'
+            },
+            tooltip: {
+                headerFormat: '<small>{point.x:%e de %B a las %H:%m}</small><br>',
+                pointFormat: '<h1>{series.name}:{point.y:.2f} kw</h1>'
             }
         });
         charts.push(chart);
     });
 
-    periods = ['year','month','week'];
+    periods = ['year','month','week', 'day'];
     $.each(periods, function(index, period) {
         $.get('entities/Refrigerador/attributes/Potencia/measures?period='+period, function(measures) {
             data = []
